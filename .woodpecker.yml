@@ -22,8 +22,22 @@ steps:
           git clone https://github.com/sasmeka/wuzapi.git .
         else
           echo "Repository sudah ada, pulling..."
-          git reset --hard
+          git fetch --all
+          git reset --hard origin/main
           git pull
         fi
 
+      # backup image lama
+      - |
+        CURRENT_IMAGE=$(docker inspect $(docker compose ps -q wuzapi) --format '{{.Config.Image}}' || true)
+
+        if [ ! -z "$CURRENT_IMAGE" ]; then
+          echo "Backup image lama: $CURRENT_IMAGE"
+          docker tag $CURRENT_IMAGE wuzapi:rollback
+        fi
+
+      # deploy baru
       - docker compose up -d --build --remove-orphans
+
+      # bersihkan dangling image
+      - docker image prune -f
