@@ -1,14 +1,29 @@
+when:
+  event:
+    - push
+
 steps:
   deploy:
     image: alpine:latest
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /DATA/AppData/Projects:/app
+      - /DATA/AppData/Projects/wuzzapi:/app
 
     commands:
       - apk add --no-cache git docker-cli docker-cli-compose
 
       - cd /app
-      - git pull
+
+      - |
+        if [ ! -d ".git" ]; then
+          echo "Repository belum ada, cloning..."
+          rm -rf ./*
+          git clone https://github.com/sasmeka/wuzapi.git .
+        else
+          echo "Repository sudah ada, pulling..."
+          git reset --hard
+          git pull
+        fi
+
       - docker compose up -d --build
