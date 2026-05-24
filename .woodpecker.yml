@@ -1,0 +1,14 @@
+steps:
+  deploy:
+    image: alpine:latest
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /DATA/AppData/Projects:/app
+
+    commands:
+      - apk add --no-cache git docker-cli docker-cli-compose
+
+      - cd /app
+      - git pull
+      - docker compose up -d --build
