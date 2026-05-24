@@ -8,7 +8,7 @@ steps:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /DATA/AppData/Projects/wuzzapi:/app
+      - /DATA/AppData/Projects/wuzapi:/app
 
     commands:
       - apk add --no-cache git docker-cli docker-cli-compose
@@ -26,5 +26,5 @@ steps:
           git pull
         fi
 
-      - docker compose up -d --build --remove-orphans
+      - docker compose -p wuzapi up -d --build --remove-orphans
       - docker image prune -f
