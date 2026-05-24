@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: wuzapi_service
     ports:
       - "${WUZAPI_PORT:-8080}:8080"
     environment:
